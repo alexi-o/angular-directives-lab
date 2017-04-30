@@ -10,7 +10,6 @@ var db = require('./models');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/json
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
@@ -43,8 +42,15 @@ app.post('/cards', function create(req,res){
 });
 
 app.delete('/cards/:id',function(req, res){
-	console.log(req.params.id);
+	var id = req.params.id;
+	db.Card.findByIdAndRemove({_id: id}, function(err, cards){
+		if (err) res.json(err);
+		console.log("Removed " + id);
+		res.json(cards);
+	});
 });
+
+
 
 app.listen(port, function() {
   console.log('Server started on', port); 

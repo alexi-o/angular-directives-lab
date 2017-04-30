@@ -1,18 +1,26 @@
 angular.module('CardsAgainstAssembly')
   .controller('CardsController', CardsController);
 
-CardsController.$inject = ['$scope', '$http'];
+CardsController.$inject = ['$http'];
 
-function CardsController($scope, $http){
+function CardsController($http){
 console.log('cards controller');
-  
   var self = this;
   self.all=[];
   self.newCard = {};
-
   self.addCard = addCard;
   self.getCards = getCards;
   self.deleteCard = deleteCard;
+
+  function deleteCard(card){
+    console.log(card._id);
+    $http
+      .delete('http://localhost:3000/cards/' + card._id)
+      .then(function(res){
+        var index = self.all.indexOf(card);
+        self.all.splice(index, 1);
+      });
+  }
 
   function getCards(){
     $http
@@ -32,15 +40,6 @@ console.log('cards controller');
         getCards(); 
       });
       self.newCard = {};
-
-  function deleteCard(){
-    console.log("deleting");
-    $http
-      .delete('http://localhost:3000/cards/:id')
-      .then(function(res){
-        console.log(res.data);
-      });
-    }
   }
 }
 //   var vm = this;
